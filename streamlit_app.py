@@ -1,7 +1,8 @@
 import streamlit as st
-from transformers import GPT4
 
 st.title("Change Management Post Generator")
+
+st.header("Step 1: Provide Details for Change Management Post")
 
 # Input fields for user responses
 synopsis = st.text_area("What is the primary goal or purpose of this change?")
@@ -12,7 +13,7 @@ severity = st.selectbox("On a scale of 1 to 5, how critical is this change?", [1
 risks = st.text_area("What are the potential risks involved?")
 
 if st.button("Generate Post"):
-    # Example of combining user inputs into a structured post
+    # Combine inputs into a structured post
     post = f"""
     ## Deployment Change Management Post
 
@@ -35,5 +36,12 @@ if st.button("Generate Post"):
     
     st.subheader("Generated Change Management Post")
     st.write(post)
-    st.download_button("Download as PDF", post, file_name="change_management_post.pdf")
 
+    # Download button for the generated post
+    st.download_button("Download as Text", post, file_name="change_management_post.txt")
+
+st.header("Step 2: Review and Edit (Optional)")
+edited_post = st.text_area("Edit the generated post if needed:", "", height=300)
+
+if st.button("Download Edited Post"):
+    st.download_button("Download as Text", edited_post, file_name="edited_change_management_post.txt")

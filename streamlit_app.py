@@ -1,40 +1,39 @@
-import altair as alt
-import numpy as np
-import pandas as pd
 import streamlit as st
+from transformers import GPT4
 
-"""
-# Welcome to Streamlit!
+st.title("Change Management Post Generator")
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:.
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
+# Input fields for user responses
+synopsis = st.text_area("What is the primary goal or purpose of this change?")
+summary = st.text_area("What specific functionalities or features are being added or modified in this change?")
+implementation_plan = st.text_area("What are the step-by-step actions required to implement this change?")
+rollback_plan = st.text_area("What steps should be taken to revert to the previous state if the change fails?")
+severity = st.selectbox("On a scale of 1 to 5, how critical is this change?", [1, 2, 3, 4, 5])
+risks = st.text_area("What are the potential risks involved?")
 
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+if st.button("Generate Post"):
+    # Example of combining user inputs into a structured post
+    post = f"""
+    ## Deployment Change Management Post
 
-num_points = st.slider("Number of points in spiral", 1, 10000, 1100)
-num_turns = st.slider("Number of turns in spiral", 1, 300, 31)
+    **Synopsis:**
+    {synopsis}
 
-indices = np.linspace(0, 1, num_points)
-theta = 2 * np.pi * num_turns * indices
-radius = indices
+    **Summary of Changes:**
+    {summary}
 
-x = radius * np.cos(theta)
-y = radius * np.sin(theta)
+    **Implementation Plan:**
+    {implementation_plan}
 
-df = pd.DataFrame({
-    "x": x,
-    "y": y,
-    "idx": indices,
-    "rand": np.random.randn(num_points),
-})
+    **Rollback Plan:**
+    {rollback_plan}
 
-st.altair_chart(alt.Chart(df, height=700, width=700)
-    .mark_point(filled=True)
-    .encode(
-        x=alt.X("x", axis=None),
-        y=alt.Y("y", axis=None),
-        color=alt.Color("idx", legend=None, scale=alt.Scale()),
-        size=alt.Size("rand", legend=None, scale=alt.Scale(range=[1, 150])),
-    ))
+    **Severity and Risks:**
+    Severity: {severity}/5
+    Risks: {risks}
+    """
+    
+    st.subheader("Generated Change Management Post")
+    st.write(post)
+    st.download_button("Download as PDF", post, file_name="change_management_post.pdf")
+

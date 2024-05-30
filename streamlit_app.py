@@ -1,4 +1,9 @@
 import streamlit as st
+import openai
+import os
+
+# Load the OpenAI API key from secrets
+openai.api_key = st.secrets["openai"]["api_key"]
 
 st.title("Change Management Post Generator")
 
@@ -13,27 +18,39 @@ severity = st.selectbox("On a scale of 1 to 5, how critical is this change?", [1
 risks = st.text_area("What are the potential risks involved?")
 
 if st.button("Generate Post"):
-    # Combine inputs into a structured post
-    post = f"""
-    ## Deployment Change Management Post
+    # Combine inputs into a prompt for OpenAI API
+    prompt = f"""
+    Create a professional change management post with the following details:
 
-    **Synopsis:**
+    Synopsis:
     {synopsis}
 
-    **Summary of Changes:**
+    Summary of Changes:
     {summary}
 
-    **Implementation Plan:**
+    Implementation Plan:
     {implementation_plan}
 
-    **Rollback Plan:**
+    Rollback Plan:
     {rollback_plan}
 
-    **Severity and Risks:**
+    Severity and Risks:
     Severity: {severity}/5
     Risks: {risks}
     """
-    
+
+    # Call OpenAI API to generate the post
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=prompt,
+        max_tokens=500,
+        n=1,
+        stop=None,
+        temperature=0.7,
+    )
+
+    post = response.choices[0].text.strip()
+
     st.subheader("Generated Change Management Post")
     st.write(post)
 

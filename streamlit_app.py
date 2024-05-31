@@ -2,7 +2,10 @@ import streamlit as st
 import openai
 
 # Load the OpenAI API key from secrets
-openai.api_key = st.secrets["openai"]["api_key"]
+try:
+    openai.api_key = st.secrets["openai"]["api_key"]
+except KeyError:
+    st.error("API key for OpenAI not found. Please set the API key in the secrets.")
 
 st.title("Change Management Post Generator")
 

@@ -1,4 +1,4 @@
 altair
 pandas
 streamlit
---upgrade openai
+openai -u
